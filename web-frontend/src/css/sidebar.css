@@ -1,0 +1,17 @@
+.sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    background: #354052;
+    color: #1c4548;
+    transition: all 0.5s;
+    margin-left: 0;
+    transition: all 0.5s, height 0s;
+    height: 100vh !important;
+  }
+
+.sidebar-option{
+  font-size: 27px;
+}
+.active{
+  color:rgb(220, 72, 72);
+}

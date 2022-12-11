@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Dashboard from "./home";
+import Dashboard from "./dashboard";
 import {
     BrowserRouter as Router,
     Routes,
@@ -10,8 +10,6 @@ import NavBar from './NavBar';
 import Login from './login';
 import Registration from "./registration";
 import Monitoring from "./monitoring";
-import About from "./about";
-import Home from "./home";
 function Main(){
 
     //const [loggedUser, setLoggedUser] = useState('None')
@@ -33,9 +31,8 @@ function Main(){
                 <Routes>
                     <Route exact path='/' element={<Monitoring/>} />
                     <Route exact path='/login' element={<Login /*func={getTextFromChild} */ />} />
-                    <Route exact path='/home' element={<Home /*text={text} loggedUser={loggedUser} */ />} />
+                    <Route exact path='/home' element={<Dashboard /*text={text} loggedUser={loggedUser} */ />} />
                     <Route exact path='/register' element={<Registration/>}/>
-                    <Route exact path='/about' element={<About/>}/>
                 </Routes>
             </Router>
             </div>

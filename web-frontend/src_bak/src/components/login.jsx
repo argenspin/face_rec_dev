@@ -13,10 +13,7 @@ import Form from 'react-bootstrap/Form';
 import '../css/form_style.css'
 import axios from "axios"
 import NavBar from "./NavBar";
-import Dashboard from "./home";
-import '../css/test_login.css'
-import ihrdlogo from '../img/ihrdlogo.png';
-import userlogo from '../img/userlogo.png';
+import Dashboard from "./dashboard";
 
 
 function Login(props){
@@ -63,7 +60,6 @@ function Login(props){
       await axios
       .post('api/token/obtain/', {'username':username,'password':password},{headers: {'Content-Type':'application/json'}})
       .then(res =>{
-        localStorage.setItem('refresh',res.data['refresh']);
         localStorage.setItem('access',res.data['access']);
         localStorage.setItem('loggedUser',username);
         requestWithToken();
@@ -71,7 +67,7 @@ function Login(props){
 
       } )
       .catch(err => {
-        alert(err);
+        console.log(err)
       })
       //console.log(loggedState)
     }
@@ -83,7 +79,7 @@ function Login(props){
   }
   if(!localStorage.getItem('access'))
   {
-  /*return (
+  return (
     <div>
       <NavBar/>
       <br/><br/>
@@ -103,46 +99,6 @@ function Login(props){
         </div>
       </form>
     </div>
-  )
-  */
-
-  return(
-    <div>
-    <NavBar/>
-    <div className="container-fluid">
-		<div className="row main-content bg-success text-center">
-			<div className="col-md-4 text-center company__info">
-				<img src={userlogo}/>
-			</div>
-			<div className="col-md-8 col-xs-12 col-sm-12 login_form ">
-				<div className="container-fluid">
-					<div className="row">
-						<h2>Log In</h2>
-					</div>
-					<div className="row">
-						<form control="" className="form-group">
-							<div className="row">
-								<input type="text" name="username" id="username" className="form__input" placeholder="Username" onChange={(e) => setUsername(e.target.value)}/>
-							</div>
-							<div className="row">
-								{/*<span className="fa fa-lock"></span>*/}
-								<input type="password" name="password" id="password" className="form__input" placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
-							</div>
-
-							<div className="row">
-								<input type="submit" value="Submit" className="btn_login" onClick={(e)=>submitForm(e)}/>
-                <input type="button" value="Forgot Password" className="btn_login" />
-              </div>
-						</form>
-					</div>
-					<div className="row">
-						<p>Don't have an account? <Link to='/register'>Register Here</Link></p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-  </div>
   )
   }
   else

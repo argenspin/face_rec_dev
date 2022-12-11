@@ -18,9 +18,9 @@ function NavBar() {
         <Container>
           <Navbar.Brand href="/"><img src={ihrdlogo}/></Navbar.Brand>
           <Nav className="me-auto">
-            <NavLink href="/"><h4>Monitoring</h4></NavLink>
-            <NavLink href="/login"><h4>Login</h4></NavLink>
-            <NavLink href="/about"><h4>About</h4></NavLink>
+            <Nav.Link href="/"><h4>Monitoring</h4></Nav.Link>
+            <Nav.Link href="/login"><h4>Login</h4></Nav.Link>
+            <Nav.Link href="/about"><h4>About</h4></Nav.Link>
           </Nav>
         </Container>
       </Navbar>
