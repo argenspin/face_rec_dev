@@ -1,8 +1,11 @@
 from django.contrib import admin
-from .models import CustomUser
+from .models import Student,TeacherUser,StudClass
 # Register your models here.
 
-class CustomUserAdmin(admin.ModelAdmin):
-    model = CustomUser
+class TeacherUserAdmin(admin.ModelAdmin):
+    model = TeacherUser
 
-admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(TeacherUser, TeacherUserAdmin)
+admin.site.register(Student,TeacherUserAdmin)
+#admin.site.register(Teacher,TeacherUserAdmin)
+admin.site.register(StudClass,TeacherUserAdmin)

@@ -40,8 +40,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'facerecognition',
+    'rest_framework_simplejwt.token_blacklist',
 ]
-AUTH_USER_MODEL = 'facerecognition.CustomUser'
+AUTH_USER_MODEL = 'facerecognition.TeacherUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -84,6 +85,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+
 }
 
 SIMPLE_JWT = {
@@ -155,3 +157,11 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'casattendancemain@gmail.com'
+EMAIL_HOST_PASSWORD = 'ycavsjpfyweamsdl'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'CAS ADMIN'
