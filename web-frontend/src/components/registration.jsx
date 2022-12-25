@@ -1,18 +1,70 @@
 import axios from "axios";
-import {React,useState} from "react";
+import {React,useEffect,useLayoutEffect,useState} from "react";
 import NavBar from "./NavBar";
-import {useNavigate,Navigate} from 'react-router-dom'
+import {useNavigate,Navigate, useParams} from 'react-router-dom'
 import '../css/test_login.css';
 import userlogo from '../img/userlogo.png';
 import { Link } from "react-router-dom";
 
 function Registration(){
 
+    const routeParams = useParams();
     const navigate = useNavigate();
+    const [teachername,setTeacherName] = useState('')
     const [username,setUsername] = useState('')
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
+    const [accessToken,setAccessToken] = useState('')
+    const [mainComponent,setMainComponent] = useState('')
+    const [alreadyRegistered,setAlreadyRegistered] = useState(false)
 
+    const axiosInstance = axios.create({
+      baseURL: '/api/',
+      headers: {'Content-Type':'multipart/form-data'},
+      timeout: 1000
+  })
+
+    axiosInstance.interceptors.response.use(
+      response => {
+          console.log("Interceptor working")
+          return response
+      },
+      error => {
+          console.log("Error catched by interceptor");
+          if(error.response.status == 401)
+          {
+              return Promise.reject(error);
+          }
+      }
+    ) 
+
+  axiosInstance.interceptors.request.use(
+      request => {
+              request.headers['Authorization'] = `JWT ${accessToken}`;
+          return request;
+      },
+      error => {
+          return Promise.reject(error);
+      }
+  )
+
+
+  const getAccessToken = async() => {
+    await axiosInstance
+    .post('token/refresh/', {'refresh':routeParams['refresh']})
+    .then(res => {
+      console.log(res.data)
+      setAccessToken(res.data['access'])
+      
+    })
+    .catch(err=> {
+      setAlreadyRegistered(true);
+      console.log("culprit")
+      console.log(err);
+    })
+
+
+  }
     const validateForm = () => {
         if(!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)))
         {
@@ -31,12 +83,24 @@ function Registration(){
 
     const submitForm = (e) => {
       e.preventDefault();
-        if(validateForm())
+        if(1)
         {
-            axios
-            .post('/api/user/create/', {'username':username,'email':email,'password':password},{headers: {'Content-Type':'application/json'}})
+            let form_data = new FormData();
+            form_data.append('name',teachername)
+            form_data.append('username',username)
+            form_data.append('password',password)
+            axiosInstance
+            .post('teacher/completeregister/', form_data)
             .then(res => {
-                alert('User created successfully. Now login using the registered credentials');
+              axiosInstance
+              .post('token/blacklist/', {'refresh':routeParams['refresh']})
+              .then(res => {
+                  console.log("blacklisted successfully");
+              })
+              .catch(err => {
+                  console.log(err);
+              })
+                alert('Registration completed successfully. Now login using the registered credentials');
                 navigate('/login');
             })
             .catch(err => {
@@ -44,37 +108,15 @@ function Registration(){
             })
         }
     }
-    if(!localStorage.getItem('access'))
-    {
-      /*
-    return(
-        <div>
-        <NavBar/>
-        <br/><br/>
-        <form className="text-center m-5">
-        
-        <div>
-            <label>Username:</label>
-            <input className="m-2" type="text" id="reg_username" placeholder="Enter your username" onChange={(e) => setUsername(e.target.value)}/>
-          </div>
-          <div>
-            <label>Email:</label>
-            <input className="m-2" type="email" id="reg_email" placeholder="Enter your email" onChange={(e) => setEmail(e.target.value)}/>
-          </div>
-        <br/>
-          <div>
-            <label> Password: </label>
-            <input className="m-2" type="password" id="reg_pass" placeholder="Enter your password" onChange={(e) => setPassword(e.target.value)}/>
-          </div>
-          <div>
-            <button type="button" className="m-3 btn btn-primary" id="submit_button" onClick={submitForm}>Submit</button>
-            <button type="reset" className="m-0 btn btn-secondary" id="reset_button">Reset</button>
-          </div>
-        </form>
-      </div>
-    )
 
-    */
+    useEffect(()=> {
+      setUsername(routeParams['username']);
+      getAccessToken();
+    },[])
+
+    if(!localStorage.getItem('access') && !alreadyRegistered)
+    {
+      console.log(routeParams)
     return(
       <div>
       <NavBar/>
@@ -86,20 +128,24 @@ function Registration(){
         <div className="col-md-8 col-xs-12 col-sm-12 login_form ">
           <div className="container-fluid">
             <div className="row">
-              <h2>Register User</h2>
+              <h2>Complete Teacher Registration</h2>
             </div>
             <div className="row">
               <form control="" className="form-group">
                 <div className="row">
-                  <input type="text" name="username" id="username" className="form__input" placeholder="Username" onChange={(e) => setUsername(e.target.value)}/>
+                  <input type="text" name="name" id="name" className="form__input" placeholder="Name" onChange={(e) => setTeacherName(e.target.value)}/>
                 </div>
                 <div className="row">
-                  <input type="email" name="email" id="email" className="form__input" placeholder="Email" onChange={(e) => setEmail(e.target.value)}/>
+                  <input type="email" name="email" id="email" value={routeParams['username']} className="form__input" placeholder="Email"/>
                 </div>
 
                 <div className="row">
                   {/*<span className="fa fa-lock"></span>*/}
                   <input type="password" name="password" id="password" className="form__input" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
+                </div>
+                <div className="row">
+                  {/*<span className="fa fa-lock"></span>*/}
+                  <input type="password" name="password_confirm" id="password_confirm" className="form__input" placeholder="Confirm Password" onChange={(e) => setPassword(e.target.value)} />
                 </div>
   
                 <div className="row">
@@ -108,9 +154,6 @@ function Registration(){
                 </div>
               </form>
             </div>
-            <div className="row">
-              <p>Already have an account? <Link to='/login'>Login</Link></p>
-            </div>
           </div>
         </div>
       </div>
@@ -118,10 +161,13 @@ function Registration(){
     </div>
     )
     }
+
     else
     {
       return(
-        <Navigate to='/home'/>
+        <div>
+        <h1>This user has already completed the registration. click <a href='/login'>here</a> to login</h1>
+        </div>
       
       )
     }

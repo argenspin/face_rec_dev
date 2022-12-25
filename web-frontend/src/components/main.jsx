@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import Dashboard from "./home";
 import {
     BrowserRouter as Router,
     Routes,
     Route,
     Link,
+    useLocation,
   } from "react-router-dom";
 import NavBar from './NavBar';
 import Login from './login';
@@ -12,32 +12,36 @@ import Registration from "./registration";
 import Monitoring from "./monitoring";
 import About from "./about";
 import Home from "./home";
+import Students from "./student/students";
+import { useLayoutEffect } from "react";
+import { useEffect } from "react";
 function Main(){
 
-    //const [loggedUser, setLoggedUser] = useState('None')
-    //const [text, setText] = useState('');
+    const [loggedUser, setLoggedUser] = useState('')
 
     //Function to return value from parent to child
-    /*const getTextFromChild = (recievedText,recievedLoggedUser) =>{
-        setText(recievedText);
+    /*
+    const getTextFromChild = (recievedLoggedUser) =>{
         setLoggedUser(recievedLoggedUser);
-        console.log(recievedText)
+        console.log(recievedLoggedUser);
     }
     */
+    
+
 
 
         return (
             <div>
+                {/*<NavBar/>*/}
             
-            <Router>
                 <Routes>
                     <Route exact path='/' element={<Monitoring/>} />
-                    <Route exact path='/login' element={<Login /*func={getTextFromChild} */ />} />
-                    <Route exact path='/home' element={<Home /*text={text} loggedUser={loggedUser} */ />} />
-                    <Route exact path='/register' element={<Registration/>}/>
-                    <Route exact path='/about' element={<About/>}/>
+                    <Route path='login' element={<Login /*func={getTextFromChild} */  />} />
+                    <Route path='home/*' element={<Home />} />
+                    <Route path='register/:refresh/:username' element={<Registration/>}/>
+                    <Route path='about' element={<About/>}/>
+
                 </Routes>
-            </Router>
             </div>
         )
 }

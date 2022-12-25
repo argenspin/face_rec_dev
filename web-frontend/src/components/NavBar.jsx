@@ -9,22 +9,58 @@ import {
     Route,
     Link,
   } from "react-router-dom";
-import Login from './login';
-function NavBar() {
-  return (
-    <div className='mw-100 bg-success'>
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 
-<Navbar bg="dark" variant="dark">
+function NavBar() {
+
+  const [show,setShow] = useState(false);
+
+  useEffect(()=> {
+    if(!localStorage.getItem('loggedUser'))
+    {
+      setShow(true);
+    }
+    else
+    {
+      setShow(false);
+    }
+  },[])
+
+  useLayoutEffect(()=> {
+    if(!localStorage.getItem('access'))
+    {
+      setShow(true);
+    }
+    else
+    {
+      setShow(false);
+    }
+  })
+
+  if(show)
+  {
+  return (
+    
+    <div className='max-w-full bg-green-500'>
+
+<Navbar className='p-1' bg="dark" variant="dark">
         <Container>
-          <Navbar.Brand href="/"><img src={ihrdlogo}/></Navbar.Brand>
+          <Navbar.Brand className='p-2' href="/"><img src={ihrdlogo}/></Navbar.Brand>
           <Nav className="me-auto">
-            <NavLink href="/"><h4>Monitoring</h4></NavLink>
-            <NavLink href="/login"><h4>Login</h4></NavLink>
-            <NavLink href="/about"><h4>About</h4></NavLink>
+            <Link className='text-2xl m-2 text-gray-400	' to="/">Monitoring</Link>
+            <Link className='text-2xl m-2 text-gray-400' to="/login">Login</Link>
+            <Link className='text-2xl m-2 text-gray-400' to="/about">About</Link>
           </Nav>
         </Container>
       </Navbar>
     </div>
   )
+  }
+  else{
+    console.log("Navbar hidden")
+  }
 }
+
 export default NavBar;

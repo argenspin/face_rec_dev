@@ -8,7 +8,7 @@ import {
     Navigate,
     useNavigate,
   } from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.css'
+//import 'bootstrap/dist/css/bootstrap.css'
 import Form from 'react-bootstrap/Form';
 import '../css/form_style.css'
 import axios from "axios"
@@ -18,14 +18,11 @@ import '../css/test_login.css'
 import ihrdlogo from '../img/ihrdlogo.png';
 import userlogo from '../img/userlogo.png';
 
-
 function Login(props){
 
   const navigate = useNavigate();
   const [password,setPassword] = useState('')
   const [username, setUsername] = useState('')
-  const [loggedState,setLoggedState] = useState(false)
-  const [sampleText, setSampleText] = useState('empty')
 
   const validateForm = () => {
     let valid = true; 
@@ -42,20 +39,6 @@ function Login(props){
     return valid;
   }
 
-  const requestWithToken = () => {
-      //console.log(res.data['access'])
-      let access_token = localStorage.getItem('access')
-      let test = 'Authorization: JWT '+ access_token
-      console.log(test)
-      axios.get('/api/hello/',{headers: {'Content-Type':'application/json', 'Authorization':'JWT '+ access_token }} )
-      .then(res => {
-        //console.log(res.data)
-        setSampleText(res.data['hello'])
-        setLoggedState(true);
-        //localStorage.setItem('hello',res.data['hello']);
-        //props.func(res.data['hello']);
-      })
-  }
   const submitForm = async(e) => {
     e.preventDefault();
     if(validateForm())
@@ -65,15 +48,13 @@ function Login(props){
       .then(res =>{
         localStorage.setItem('refresh',res.data['refresh']);
         localStorage.setItem('access',res.data['access']);
-        localStorage.setItem('loggedUser',username);
-        requestWithToken();
-        <Navigate to="/home"/>
+        console.log("asdasd");
+        navigate('/home')
 
       } )
       .catch(err => {
         alert(err);
       })
-      //console.log(loggedState)
     }
     
   }
@@ -83,60 +64,35 @@ function Login(props){
   }
   if(!localStorage.getItem('access'))
   {
-  /*return (
-    <div>
-      <NavBar/>
-      <br/><br/>
-      <form className="text-center m-5">
-        <div>
-          <label>Email:</label>
-          <input className="m-2" type="text" id="login_username" placeholder="Enter your username" onChange={(e) => setUsername(e.target.value)}/>
-        </div>
-      <br/>
-        <div>
-          <label> Password: </label>
-          <input className="m-2" type="password" id="login_pass" placeholder="Enter your password" onChange={(e) => setPassword(e.target.value)}/>
-        </div>
-        <div>
-          <button type="submit" className="m-3 btn btn-primary" id="submit_button" onClick={(e)=>submitForm(e)}>Login</button>
-          <button type="button" className="m-0 btn btn-secondary" id="register_button" onClick={gotoRegistration}>Register</button>
-        </div>
-      </form>
-    </div>
-  )
-  */
 
   return(
     <div>
     <NavBar/>
     <div className="container-fluid">
-		<div className="row main-content bg-success text-center">
-			<div className="col-md-4 text-center company__info">
+		<div className="flex flex-wrap  main-content bg-green-500 text-center">
+			<div className="md:w-1/3 pr-4 pl-4 text-center company__info">
 				<img src={userlogo}/>
 			</div>
-			<div className="col-md-8 col-xs-12 col-sm-12 login_form ">
-				<div className="container-fluid">
-					<div className="row">
+			<div className="md:w-2/3 sm:w-full pr-4 pl-4 login_form ">
+				<div className="container max-w-full mx-auto sm:px-4">
+					<div className="flex flex-wrap ">
 						<h2>Log In</h2>
 					</div>
-					<div className="row">
-						<form control="" className="form-group">
-							<div className="row">
+					<div className="flex flex-wrap ">
+						<form control="" className="mb-4">
+							<div className="flex flex-wrap ">
 								<input type="text" name="username" id="username" className="form__input" placeholder="Username" onChange={(e) => setUsername(e.target.value)}/>
 							</div>
-							<div className="row">
+							<div className="flex flex-wrap ">
 								{/*<span className="fa fa-lock"></span>*/}
 								<input type="password" name="password" id="password" className="form__input" placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
 							</div>
 
-							<div className="row">
+							<div className="flex flex-wrap ">
 								<input type="submit" value="Submit" className="btn_login" onClick={(e)=>submitForm(e)}/>
                 <input type="button" value="Forgot Password" className="btn_login" />
               </div>
 						</form>
-					</div>
-					<div className="row">
-						<p>Don't have an account? <Link to='/register'>Register Here</Link></p>
 					</div>
 				</div>
 			</div>
@@ -147,7 +103,7 @@ function Login(props){
   }
   else
   {
-    //props.func(sampleText,username) //Calling the 'func' props to return value to parent component
+    //props.func(username) //Calling the 'func' props to return value to parent component
     return(
       <Navigate to='/home'/>
     

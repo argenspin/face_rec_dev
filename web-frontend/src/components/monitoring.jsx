@@ -4,6 +4,7 @@ import React, { useState,useRef } from 'react';
 import Webcam from 'react-webcam';
 import axios from 'axios';
 import '../css/monitoring.css'
+import { Navigate } from "react-router-dom";
 
 const Monitoring =() => {
 
@@ -92,7 +93,7 @@ const Monitoring =() => {
         setVerifyMode(!verifyMode);
       }
 
-    if(verifyMode)
+    if(verifyMode && !localStorage.getItem('access'))
     {
       return ( 
         <div>
@@ -124,7 +125,7 @@ const Monitoring =() => {
 
       );
     }
-    else
+    else if(!localStorage.getItem('access'))
     {
       return(
 
@@ -132,7 +133,15 @@ const Monitoring =() => {
           <NavBar/>
           <br/>
           <br/>
-          <button className="btn btn-primary verify_button" type="button" id="verify_toggle" onClick={toggleVerify}>Verify</button>
+          <button className="bg-red-700 hover:bg-red-500 rounded font-bold px-4 py-3 m-10" type="button" id="verify_toggle" onClick={toggleVerify}>Verify</button>
+        </div>
+      )
+    }
+    else
+    {
+      return(
+        <div>
+          <Navigate to={'/home'}/>
         </div>
       )
     }

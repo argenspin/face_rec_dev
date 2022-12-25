@@ -3,3 +3,17 @@ label {
     width: 100px;
     text-align: right;
   }
+
+  .edit_form {
+
+    height: 300px;
+    width:80%;
+    position: absolute;
+    z-index: 9;
+  }
+  .create_form {
+    height: 300px;
+    width:80%;
+    position: absolute;
+    z-index: 9;
+  }
